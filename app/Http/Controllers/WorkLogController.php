@@ -139,6 +139,52 @@ class WorkLogController extends Controller
         return view('member.work-log-report', ['work_logs' => $work_logs, 'request' => $request]);
     }
 
+    public function report_download(Request $request)
+    {
+        $date_from = date("Y-m-01");
+        $date_to = date("Y-m-t");
+
+        if (isset($request->date_from)) {
+            $date_from = $request->date_from;
+        }
+        if (isset($request->date_to)) {
+            $date_to = $request->date_to;
+        }
+
+        $work_logs = WorkLog::join('users', 'work_logs.user_id', '=', 'users.id')
+        ->where('user_id', Auth::user()->id)
+        ->whereBetween('work_date', [$date_from, $date_to])
+        ->orderBy('work_date')
+        ->orderBy('work_logs.id')
+        ->get(['firstname', 'lastname', 'work_date', 'hours', 'activity', 'note'])
+        ->toArray();
+
+        $headers = [
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=work-log_'.$date_from.'-'.$date_to.'_'.date('YmdHis').'.csv',
+            'Expires' => '0',
+            'Pragma' => 'public'
+        ];
+
+        if ($work_logs) {
+            // add headers for each column in the CSV download
+            array_unshift($work_logs, array_keys($work_logs[0]));
+        }
+
+        $callback = function() use ($work_logs)
+        {
+            $out = fopen('php://output', 'w');
+            foreach ($work_logs as $row) {
+                fputcsv($out, $row);
+            }
+            fclose($out);
+        };
+
+        // download as a csv file
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function management_report(Request $request)
     {
         $date_from = date("Y-m-01");
@@ -151,12 +197,20 @@ class WorkLogController extends Controller
             $date_to = $request->date_to;
         }
 
-        $users = User::all();
+        if (Auth::user()->role == 9) { //system admin
+            $users = User::all();
+        } else {
+            // can view lower level's role data
+            $users = User::where('role', '<', Auth::user()->role)->get();
+        }
 
-        $work_logs = WorkLog::whereBetween('work_date', [$date_from, $date_to])
+        $work_logs = WorkLog::join('users', 'work_logs.user_id', '=', 'users.id')
+        ->whereBetween('work_date', [$date_from, $date_to])
         ->where(function($query) use ($request) {
             if (isset($request->user_id)) {
                 $query->where('user_id', $request->user_id);
+            } else if (Auth::user()->role != 9) { // not the system admin role
+                $query->where('role', '<', Auth::user()->role);
             }
         })->orderBy('work_date');
 
@@ -181,6 +235,8 @@ class WorkLogController extends Controller
         ->where(function($query) use ($request) {
             if (isset($request->user_id)) {
                 $query->where('user_id', $request->user_id);
+            } else if (Auth::user()->role != 9) { // not the system admin role
+                $query->where('role', '<', Auth::user()->role);
             }
         })
         ->get(['firstname', 'lastname', 'work_date', 'hours', 'activity', 'note'])
@@ -194,8 +250,10 @@ class WorkLogController extends Controller
             'Pragma' => 'public'
         ];
 
-        // add headers for each column in the CSV download
-        array_unshift($work_logs, array_keys($work_logs[0]));
+        if ($work_logs) {
+            // add headers for each column in the CSV download
+            array_unshift($work_logs, array_keys($work_logs[0]));
+        }
 
         $callback = function() use ($work_logs)
         {

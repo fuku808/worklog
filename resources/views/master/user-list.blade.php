@@ -38,11 +38,15 @@
                                 </form>
                             </td>
                             <td class="px-4 py-1">
+                                @if (config('app.env') == 'demo')
+                                    <button type="button" class="px-2 py-1 text-white bg-red-400 rounded cursor-not-allowed" disabled>Delete</button>
+                                @else
                                 <form action="{{ isset($user) ? route('user.destroy', ['user' => $user->id]) : '' }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="px-2 py-1 text-white bg-red-500 hover:bg-red-400 rounded" onclick="return confirm('Are you sure to delete this?');">Delete</button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

@@ -128,7 +128,12 @@ class TimeTrackingController extends Controller
             $work_date = $request->work_date;
         }
 
-        $users = User::all();
+        if (Auth::user()->role == 9) { //system admin
+            $users = User::all();
+        } else {
+            // can edit lower level's role data
+            $users = User::where('role', '<', Auth::user()->role)->get();
+        }
 
         $time_trackings = TimeTracking::where('work_date', $work_date)
             ->where('user_id', $request->user_id)
@@ -182,7 +187,12 @@ class TimeTrackingController extends Controller
 
     public function management_edit(string $id)
     {
-        $users = User::all();
+        if (Auth::user()->role == 9) { //system admin
+            $users = User::all();
+        } else {
+            // can edit lower level's role data
+            $users = User::where('role', '<', Auth::user()->role)->get();
+        }
 
         $time_tracking = TimeTracking::find($id);
 
@@ -270,12 +280,20 @@ class TimeTrackingController extends Controller
             $date_to = $request->date_to;
         }
 
-        $users = User::all();
+        if (Auth::user()->role == 9) { //system admin
+            $users = User::all();
+        } else {
+            // can view lower level's role data
+            $users = User::where('role', '<', Auth::user()->role)->get();
+        }
 
-        $time_trackings = TimeTracking::whereBetween('work_date', [$date_from, $date_to])
+        $time_trackings = TimeTracking::join('users', 'time_trackings.user_id', '=', 'users.id')
+        ->whereBetween('work_date', [$date_from, $date_to])
         ->where(function($query) use ($request) {
             if (isset($request->user_id)) {
                 $query->where('user_id', $request->user_id);
+            } else if (Auth::user()->role != 9) { // not the system admin role
+                $query->where('role', '<', Auth::user()->role);
             }
         })->orderBy('clocked_in');
 
@@ -300,6 +318,8 @@ class TimeTrackingController extends Controller
         ->where(function($query) use ($request) {
             if (isset($request->user_id)) {
                 $query->where('user_id', $request->user_id);
+            } else if (Auth::user()->role != 9) { // not the system admin role
+                $query->where('role', '<', Auth::user()->role);
             }
         })->orderBy('clocked_in')
         ->get(['firstname', 'lastname', 'work_date', 'clocked_in', 'clocked_out', 'total_hours'])
@@ -313,8 +333,10 @@ class TimeTrackingController extends Controller
             'Pragma' => 'public'
         ];
 
-        // add headers for each column in the CSV download
-        array_unshift($time_trackings, array_keys($time_trackings[0]));
+        if ($time_trackings) {
+            // add headers for each column in the CSV download
+            array_unshift($time_trackings, array_keys($time_trackings[0]));
+        }
 
         $callback = function() use ($time_trackings)
         {

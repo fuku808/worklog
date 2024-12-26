@@ -65,9 +65,9 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mb-4">
                     <div class="flex sm:items-center m-6 flex-col sm:flex-row px-2">
                         <label class="block sm:w-2/12 sm:text-right mb-1 pr-4" for="clocked_in">Clocked-in</label>
-                        <input name="clocked_in" type="datetime-local" class="date_range block w-full sm:w-3/12 bg-gray-200 py-2 px-3 text-right text-gray-700 border border-gray-200 rounded focus:outline-none focus:bg-white" value="{{ isset($time_tracking->clocked_in) ? $time_tracking->clocked_in : (old('clocked_in') ? old('clocked_in') : '') }}"></input>
+                        <input name="clocked_in" type="datetime-local" step="1" class="date_range block w-full sm:w-3/12 bg-gray-200 py-2 px-3 text-right text-gray-700 border border-gray-200 rounded focus:outline-none focus:bg-white" value="{{ isset($time_tracking->clocked_in) ? $time_tracking->clocked_in : (old('clocked_in') ? old('clocked_in') : '') }}"></input>
                         <label class="block sm:w-2/12 sm:text-right mb-1 pr-4" for="clocked_out">Clocked-out</label>
-                        <input name="clocked_out" type="datetime-local" class="date_range block w-full sm:w-3/12 bg-gray-200 py-2 px-3 text-right text-gray-700 border border-gray-200 rounded focus:outline-none focus:bg-white" value="{{ isset($time_tracking->clocked_out) ? $time_tracking->clocked_out : (old('clocked_out') ? old('clocked_out') : '') }}"></input>
+                        <input name="clocked_out" type="datetime-local" step="1" class="date_range block w-full sm:w-3/12 bg-gray-200 py-2 px-3 text-right text-gray-700 border border-gray-200 rounded focus:outline-none focus:bg-white" value="{{ isset($time_tracking->clocked_out) ? $time_tracking->clocked_out : (old('clocked_out') ? old('clocked_out') : '') }}"></input>
                         <input type="hidden" id="work_date_hidden" name="work_date" value="{{ isset($time_tracking->work_date) ? $time_tracking->work_date : (isset($request->work_date) ? $request->work_date : '') }}" />
                         <input type="hidden" name="user_id" value="{{ isset($time_tracking->user_id) ? $time_tracking->user_id : (isset($request->user_id) ? $request->user_id : '') }}" />
                     </div>

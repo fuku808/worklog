@@ -3,6 +3,7 @@
 use App\Http\Controllers\TimeTrackingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkLogController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+    if (Auth::user()) {
+        return redirect()->route('clockin-out.index');
+    } else {
+        return view('auth.login');
+    }
 });
 
 Route::middleware([
@@ -32,6 +37,7 @@ Route::middleware([
     Route::get('/clockin-out/report', [TimeTrackingController::class, 'report'])->name('clockin-out.report');
     Route::resource('work-log', WorkLogController::class)->except(['create', 'show']);
     Route::get('/work-log/report', [WorkLogController::class, 'report'])->name('work-log.report');
+    Route::get('/work-log/download', [WorkLogController::class, 'report_download'])->name('work-log.download');
 });
 
 Route::middleware([
