@@ -40,15 +40,15 @@ Route::middleware([
     'verified',
     'can:manager'
 ])->group(function () {
-    Route::get('mangement/clockin-out', [TimeTrackingController::class, 'management'])->name('management.clockin-out');
-    Route::post('mangement/clockin-out/store', [TimeTrackingController::class, 'management_store'])->name('management.clockin-out.store');
-    Route::get('mangement/clockin-out/{id}/edit', [TimeTrackingController::class, 'management_edit'])->name('management.clockin-out.edit');
-    Route::put('mangement/clockin-out/{id}/update', [TimeTrackingController::class, 'management_update'])->name('management.clockin-out.update');
-    Route::delete('mangement/clockin-out/{id}/destroy', [TimeTrackingController::class, 'management_destroy'])->name('management.clockin-out.destroy');
-    Route::get('mangement/clockin-out/report', [TimeTrackingController::class, 'management_report'])->name('management.clockin-out.report');
-    Route::get('mangement/clockin-out/download', [TimeTrackingController::class, 'management_report_download'])->name('management.clockin-out.download');
-    Route::get('mangement/work-log/report', [WorkLogController::class, 'management_report'])->name('management.work-log.report');
-    Route::get('mangement/work-log/download', [WorkLogController::class, 'management_report_download'])->name('management.work-log.download');
+    Route::get('management/clockin-out', [TimeTrackingController::class, 'management'])->name('management.clockin-out');
+    Route::post('maangement/clockin-out/store', [TimeTrackingController::class, 'management_store'])->name('management.clockin-out.store');
+    Route::get('management/clockin-out/{id}/edit', [TimeTrackingController::class, 'management_edit'])->name('management.clockin-out.edit');
+    Route::put('management/clockin-out/{id}/update', [TimeTrackingController::class, 'management_update'])->name('management.clockin-out.update');
+    Route::delete('management/clockin-out/{id}/destroy', [TimeTrackingController::class, 'management_destroy'])->name('management.clockin-out.destroy');
+    Route::get('management/clockin-out/report', [TimeTrackingController::class, 'management_report'])->name('management.clockin-out.report');
+    Route::get('management/clockin-out/download', [TimeTrackingController::class, 'management_report_download'])->name('management.clockin-out.download');
+    Route::get('management/work-log/report', [WorkLogController::class, 'management_report'])->name('management.work-log.report');
+    Route::get('management/work-log/download', [WorkLogController::class, 'management_report_download'])->name('management.work-log.download');
 });
 
 Route::middleware([
