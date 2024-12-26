@@ -100,6 +100,11 @@ class UserController extends Controller
 
         try {
             $user = User::find($id);
+
+            if ($user->id == Auth::user()->id && $request->role < Auth::user()->role) {
+                throw new Exception("Cannot downgrade your role by yourself. Please request to other system admins.");
+            }
+
             $user->update([
                 'username' => $request->username,
                 'firstname' => $request->firstname,
@@ -129,7 +134,14 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            User::find($id)->delete();
+            $user = User::find($id);
+
+            // cannot delete own account
+            if ($user->id == Auth::user()->id) {
+                throw new Exception("Cannot delete your account by yourself.");
+            }
+
+            $user->delete();
 
             $notification = array(
                 'message' => "Deleted successfully.",

@@ -57,7 +57,11 @@
                     </div>
                     <div class="flex justify-center m-6f lex-col sm:flex-row px-2">
                         <a href="{{ route('user.index') }}" class="block sm:w-2/12 bg-blue-700 py-2 px-4 mr-3 text-center text-white bg-gray-700 hover:bg-gray-500 rounded">Cancel</a>
+                        @if (config('app.env') == 'demo')
+                        <button type="button" class="block sm:w-2/12 bg-blue-700 py-2 px-4 text-white bg-indigo-500 rounded cursor-not-allowed" disabled>Add/Update</button>
+                        @else
                         <button type="submit" class="block sm:w-2/12 bg-blue-700 py-2 px-4 text-white bg-indigo-700 hover:bg-indigo-500 rounded">Add/Update</button>
+                        @endif
                     </div>
                 </div>
             </form>
@@ -91,7 +95,11 @@
                         <input type="password" name="new_password" max="255" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
                     </div>
                     <div class="flex flex-row-reverse items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        @if (config('app.env') == 'demo')
+                        <button type="button" class="text-white bg-blue-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ms-3 text-center cursor-not-allowed" disabled>Update</button>
+                        @else
                         <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ms-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
+                        @endif
                         <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
                     </div>
                 </div>
