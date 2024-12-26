@@ -19,36 +19,36 @@
                     <label class="block sm:w-1/12 sm:text-right mb-1 ml-4 pr-4" for="work_date">Work date</label>
                     <input name="work_date" type="date" class="rounded search-input" value="{{ isset($request->work_date) ? $request->work_date : (isset($time_tracking) ? $time_tracking->work_date : date('Y-m-d')) }}"></input>
                 </div>
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-gray-700 bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                            <th scope="col" class="px-6 py-2">Clocked in</th>
-                            <th scope="col" class="px-6 py-2">Clocked out</th>
-                            <th scope="col" class="px-6 py-2">Worked hours</th>
-                            <th scope="col" class="px-6 py-2"></th>
-                            <th scope="col" class="px-6 py-2"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($time_trackings as $time_tracking_data)
-                            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <td class="px-4 py-1">{{ $time_tracking_data->clocked_in }}</td>
-                                <td class="px-4 py-1">{{ $time_tracking_data->clocked_out }}</td>
-                                <td class="px-4 py-1">{{ $time_tracking_data->total_hours }}</td>
-                                <td class="px-4 py-1"><a href="{{ isset($time_tracking_data) ? route('management.clockin-out.edit', ['id' => $time_tracking_data->id]) : '' }}" class="p-2 text-white bg-yellow-500 rounded">Edit</a></td>
-                                <td class="px-4 py-1">
-                                    <form action="{{ isset($time_tracking_data) ? route('management.clockin-out.destroy', ['id' => $time_tracking_data->id]) : '' }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-2 text-white bg-red-500 rounded" onclick="return confirm('Are you sure to delete this?');">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
             </form>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-gray-700 bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                        <th scope="col" class="px-6 py-2">Clocked in</th>
+                        <th scope="col" class="px-6 py-2">Clocked out</th>
+                        <th scope="col" class="px-6 py-2">Worked hours</th>
+                        <th scope="col" class="px-6 py-2"></th>
+                        <th scope="col" class="px-6 py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($time_trackings as $time_tracking_data)
+                        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-4 py-1">{{ $time_tracking_data->clocked_in }}</td>
+                            <td class="px-4 py-1">{{ $time_tracking_data->clocked_out }}</td>
+                            <td class="px-4 py-1">{{ $time_tracking_data->total_hours }}</td>
+                            <td class="px-4 py-1"><a href="{{ isset($time_tracking_data) ? route('management.clockin-out.edit', ['id' => $time_tracking_data->id]) : '' }}" class="p-2 text-white bg-yellow-500 rounded">Edit</a></td>
+                            <td class="px-4 py-1">
+                                <form action="{{ isset($time_tracking_data) ? route('management.clockin-out.destroy', ['id' => $time_tracking_data->id]) : '' }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 text-white bg-red-500 rounded" onclick="return confirm('Are you sure to delete this?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             <hr />
             <form action="{{ isset($time_tracking) ? route('management.clockin-out.update', ['id' => $time_tracking->id]) : route('management.clockin-out.store') }}" method="POST">
                 @if (isset($time_tracking))

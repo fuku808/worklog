@@ -246,12 +246,12 @@ class TimeTrackingController extends Controller
 
     public function management_destroy(string $id)
     {
+        $time_tracking = TimeTracking::find($id);
+
+        $work_date = $time_tracking->work_date;
+        $user_id = $time_tracking->user_id;
+
         try {
-            $time_tracking = TimeTracking::find($id);
-
-            $work_date = $time_tracking->work_date;
-            $user_id = $time_tracking->user_id;
-
             $time_tracking->delete();
 
             $notification = array(
